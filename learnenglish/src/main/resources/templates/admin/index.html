@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorator="admin/common/template">
+<head>
+<meta charset="utf-8">
+<title>Home</title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<div class="container">
+			<div class="row" style="margin-bottom: 20px; margin-top: 20px;"
+				sec:authorize="hasAnyRole('ROLE_ADMIN')">
+				<div class="col-3">
+					<div class="card h-100">
+						<a th:href="@{/admin/active-code/list}"><img
+							style="padding: 15px;" class="card-img-top"
+							th:src="@{/user/images/activeCode.png}"></a>
+						<div class="card-body" style="padding: 0.72rem;">
+							<h5 class="card-title"
+								style="text-align: center; font-size: 13px; font-style: oblique;">
+								<a th:href="@{/admin/active-code/list}">Mã Kích Hoạt</a>
+							</h5>
+						</div>
+					</div>
+				</div>
+				<div class="col-3">
+					<div class="card h-100">
+						<a th:href="@{/admin/unit/list}"><img style="padding: 15px;"
+							class="card-img-top" th:src="@{/user/images/lesson.jpg}"></a>
+						<div class="card-body" style="padding: 0.72rem;">
+							<h5 class="card-title"
+								style="text-align: center; font-size: 13px; font-style: oblique;">
+								<a th:href="@{/admin/unit/list}">Bài Học</a>
+							</h5>
+						</div>
+					</div>
+				</div>
+				<div class="col-3">
+					<div class="card h-100">
+						<a th:href="@{/admin/music/list}"><img style="padding: 15px;"
+							class="card-img-top" th:src="@{/user/images/audio.png}"></a>
+						<div class="card-body" style="padding: 0.72rem;">
+							<h5 class="card-title"
+								style="text-align: center; font-size: 13px; font-style: oblique;">
+								<a th:href="@{/admin/music/list}">Music</a>
+							</h5>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-3">
+					<div class="card h-100">
+						<a th:href="@{/admin/video/list}"><img style="padding: 15px;"
+							class="card-img-top" th:src="@{/user/images/video.png}"></a>
+						<div class="card-body" style="padding: 0.72rem;">
+							<h5 class="card-title"
+								style="text-align: center; font-size: 13px; font-style: oblique;">
+								<a th:href="@{/admin/video/list}">Video</a>
+							</h5>
+						</div>
+					</div>
+				</div>
+				<div class="col-3" style="margin-bottom: 20px; margin-top: 20px;">
+					<div class="card h-100">
+						<a th:href="@{/admin/game-one/list}"><img
+							style="padding: 15px;" class="card-img-top"
+							th:src="@{/user/images/gameone1.png}"></a>
+						<div class="card-body" style="padding: 0.72rem;">
+							<h5 class="card-title"
+								style="text-align: center; font-size: 13px; font-style: oblique;">
+								<a th:href="@{/admin/game-one/list}">Words</a>
+							</h5>
+						</div>
+					</div>
+				</div>
+				<div class="col-3" style="margin-bottom: 20px; margin-top: 20px;">
+					<div class="card h-100">
+						<a th:href="@{/admin/game-two/list}"><img
+							style="padding: 15px;" class="card-img-top"
+							th:src="@{/user/images/gametwo.png}"></a>
+						<div class="card-body" style="padding: 0.72rem;">
+							<h5 class="card-title"
+								style="text-align: center; font-size: 13px; font-style: oblique;">
+								<a th:href="@{/admin/game-two/list}">Activity</a>
+							</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="container">
+			<div class="row" style="margin-bottom: 20px; margin-top: 20px;"
+				sec:authorize="hasAnyRole('ROLE_MEMBER')">
+				<div class="col-lg-4 col-md-6 col-sm-6 col-6"
+					th:each="unit:${unitDTOs}">
+					<div class="card h-100">
+						<img style="padding: 15px;" class="card-img-top"
+							th:src="@{'/member/file/'+${unit.image}}"> <a
+							class="btn btn-success" th:href="@{'/member/audio/'+${unit.id}}"><i
+							class="fa fa-headphones" aria-hidden="true"></i>audio</a> <a
+							class="btn btn-danger" th:href="@{'/member/video/'+${unit.id}}"><i
+							class="fa fa-eye" aria-hidden="true"></i>video</a> <a
+							class="btn btn-primary"
+							th:href="@{'/member/game-one/'+${unit.id}}"><i
+							class="fa fa-play" aria-hidden="true"></i>words</a> <a
+							class="btn btn-warning"
+							th:href="@{'/member/game-two/'+${unit.id}}"><i
+							class="fa fa-play" aria-hidden="true"></i>activity</a>
+
+						<div class="card-body" style="padding: 0.72rem;">
+							<h5 class="card-title"
+								style="text-align: center; font-size: 13px; font-style: oblique;">
+								<a th:href="@{/member/unit/list}" th:text="${unit.name}"></a>
+							</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

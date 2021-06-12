@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorator="admin/common/template">
+
+<head>
+<meta charset="utf-8">
+<title>Words</title>
+<script>
+	function playAudio() {
+		document.getElementById('audio').play();
+	}
+</script>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<div class="container">
+			<div class="row" style="margin-bottom: 20px; margin-top: 20px;"
+				sec:authorize="hasAnyRole('ROLE_MEMBER')">
+				<div class="col-lg-4 col-md-6 col-sm-6 col-6 slice"
+					th:each="vid:${gameOneDTOs}" style="margin: 0 auto;">
+					<div class="card h-100">
+						<audio id="audio">
+							<source th:src="@{'/member/file/'+${vid.audio}}"
+								type="audio/mpeg">
+							Your browser does not support the video tag.
+						</audio>
+						<div style="position: relative;">
+							<img style="padding: 15px;" class="card-img-top"
+								th:src="@{'/member/file/'+${vid.image}}" onclick="playAudio()">
+							<div style="position: absolute; top: 10%; left: 10%; ">
+								<i class="fa fa-volume-up" aria-hidden="true"
+									></i>
+							</div>
+						</div>
+						<div class="card-body" style="padding: 0.72rem;">
+							<h5 class="card-title"
+								style="text-align: center; font-size: 13px; font-style: oblique;">
+								<p th:text="${vid.name}"></p>
+							</h5>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<nav class="blog-pagination justify-content-center d-flex">
+			<ul class="pagination">
+				<li class="page-item" th:each="page : ${listCount}"><a
+					th:href="@{'/member/game-one/'+${id}+'?page='+${page}}"
+					class="page-link" th:text="${page}"></a></li>
+			</ul>
+		</nav>
+	</div>
+
+</body>
+</html>

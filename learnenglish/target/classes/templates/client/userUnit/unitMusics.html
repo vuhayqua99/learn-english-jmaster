@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorator="admin/common/template">
+
+<head>
+<meta charset="utf-8">
+<title>Audio</title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<div class="container">
+			<div class="row" style="margin-bottom: 20px; margin-top: 20px;"
+				sec:authorize="hasAnyRole('ROLE_MEMBER')">
+				<div class="col-lg-4 col-md-6 col-sm-6 col-6 slice"
+					th:each="vid:${musicDTOs}">
+					<div class="card h-100">
+						<audio controls>
+							<source th:src="@{'/member/file/'+${vid.fileName}}"
+								type="audio/mpeg">
+							Your browser does not support the video tag.
+						</audio>
+						<div class="card-body" style="padding: 0.72rem;">
+							<h5 class="card-title"
+								style="text-align: center; font-size: 13px; font-style: oblique;">
+								<p th:text="${vid.name}"></p>
+							</h5>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<nav class="blog-pagination justify-content-center d-flex">
+			<ul class="pagination">
+				<li class="page-item" th:each="page : ${listCount}"><a
+					th:href="@{'/member/audio/'+${id}+'?page='+${page}}"
+					class="page-link" th:text="${page}"></a></li>
+			</ul>
+		</nav>
+	</div>
+</body>
+</html>

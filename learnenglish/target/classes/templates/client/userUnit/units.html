@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="admin/common/template">
+<head>
+<meta charset="UTF-8" />
+<title th:text="'Unit'"></title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<div class="row">
+			<div class="col-12">
+				<div class="card m-b-30">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-6 col-sm-6">
+								<h4 class="header-title" th:text="'Bài Học'"></h4>
+							</div>
+
+						</div>
+						<hr />
+						<div class="table-responsive">
+							<table id="datatable" class="table table-bordered">
+								<thead>
+									<tr>
+										<th></th>
+										<th th:text="'id'"></th>
+										<th th:text="'Tên'"></th>
+										<th th:text="'Ảnh'"></th>
+										<th th:text="#{text.option}"></th>
+									</tr>
+								</thead>
+
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" th:inline="javascript">
+		var vietnameseUrl = [[@{/user/plugins/datatables/Vietnamese.json}]];
+	    var url = [[@{/api/member/unit/list}]];
+	    var csrf_token = [[${_csrf.token}]];
+	    var searchHolderText = 'Tìm theo tên';
+	    
+	    var id = "";
+	    var table;
+		$(document).ready(function() {
+			table = $('#datatable').DataTable( {
+				"processing": true,
+		        "serverSide": true,
+		        "ajax": {
+		        	type:"POST",
+		            url: url,
+		            dataType: "json",
+		            contentType: "application/json",
+		            headers: {'X-CSRF-TOKEN': csrf_token},
+		            data: function ( d ) {
+		            	return JSON.stringify( d );
+		            }
+		        },
+		        "columns": [
+		            { "data": "id" },
+		            { "data": "id" },
+		            { "data": "name" },
+		            { "data": "image" },
+		            { "data": "id" }
+		        ],
+		        "order": [1, "desc"],
+		        "select": {
+		        	'style': 'multi'
+		        },
+		        "columnDefs": [
+		        	{
+					    'targets': 0,
+					    'checkboxes': {
+					       'selectRow': true
+					    }
+					 },
+					 {
+							"render": function ( data, type, row ) {
+						            return "<img src='/member/file/" + row.image+ "' width='100' />";
+			                 },
+			                "orderable": false,
+		   	                "targets": 3
+			   	         },
+					 
+	            {
+	                "render": function ( data, type, row ) {
+	                    var content = '<a class="btn btn-success" href="/member/audio/'+ row.id +'" ><i class="fa fa-headphones" aria-hidden="true"></i>audio</a>'
+	                    +'<a class="btn btn-danger" href="/member/video/'+ row.id +'" ><i class="fa fa-eye" aria-hidden="true"></i>video</a>'
+			            
+			            return content;
+	                },
+	                "orderable": false,
+	                "targets": 4
+	            },
+	          
+		        ],
+		        "language": {
+		            "url": vietnameseUrl,
+		            searchPlaceholder: searchHolderText
+		        },
+		        "initComplete": function(settings, json) {
+		        }
+	        });
+			
+			$('#datatable tbody').on( 'click', 'button', function () {
+				var data = table.row( $(this).parents('tr') ).data();
+				id = data.id;
+		    } );
+
+	    });
+		
+		
+	</script>
+	</div>
+</body>
+</html>

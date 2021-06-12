@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="admin/common/template">
+<head>
+<meta charset="UTF-8" />
+<title th:text="'Mã Kích Hoạt'"></title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<div class="row">
+			<div class="col-12">
+				<div class="card m-b-30">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-6 col-sm-6">
+								<h4 class="header-title" th:text="'Mã Kích hoạt'"></h4>
+							</div>
+							<div class="col-6 col-sm-6">
+								<a data-toggle="modal" href="" data-target="#add-active-code" class="pull-right btn btn-primary"><img th:src="@{/user/images/add.png}"
+									height="20" />Thêm mới</a>
+							</div>
+						</div>
+						<hr />
+						<div class="table-responsive">
+							<table id="datatable" class="table table-bordered">
+								<thead>
+									<tr>
+										<th></th>
+										<th th:text="'id'"></th>
+										<th th:text="'Mã Code'"></th>
+										<th th:text="'Số Lần Sử Dụng'"></th>
+										<th th:text="'Units'"></th>
+										<th th:text="#{text.option}"></th>
+									</tr>
+								</thead>
+								<tfoot>
+									<tr>
+										<td colspan="2"><button id="delButt" class="btn btn-danger">
+												<i class="fa fa-trash"></i>Xóa tất
+											</button></td>
+										<th th:text="'Mã Code'"></th>
+										<th th:text="'Số Lần Sử Dụng'"></th>
+										<th th:text="'Units'"></th>
+										<th th:text="#{text.option}"></th>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" th:text="'Bạn muốn xóa này'"></div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.no}"></button>
+						<a class="btn btn-danger btn-ok" style="color: white;" th:text="#{text.delete}"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-delete-multi" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" th:text="'Bạn muốn xoá các này'"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.no}"></button>
+						<button class="btn btn-danger btn-ok" style="color: white;" th:text="#{text.delete}"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="please-select-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">Vui lòng tích chọn các dòng để xoá?</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.cancel}"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="add-active-code" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h6 class="modal-title">
+							<span th:text="'Thêm mới'" th:remove="tag"></span>
+						</h6>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" onsubmit="submitForm();return false;">
+							<div class="form-group row">
+								<label class="col-sm-12 form-label" th:text="'Mã Code'"></label>
+								<div class="col-sm-12">
+									<input required="required" class="form-control" type="text" th:placeholder="'Mã Code'" id="code" name="code" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-12 form-label">Units (Chọn unit đưa sang phải)</label>
+								<div class="col-sm-12">
+									<select id="units-add" name="units" class="units" multiple='multiple'>
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="form-group col-sm-12">
+									<div>
+										<button id="addButton" type="submit" style="width: 60%;" class="btn btn-primary waves-effect waves-light" th:text="#{text.add}"></button>
+										<button type="button" class="btn btn-danger waves-effect waves-light" data-dismiss="modal" th:text="#{text.cancel}"></button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="update-active-code" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h6 class="modal-title">
+							<span th:text="'Cập Nhật'" th:remove="tag"></span>
+						</h6>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" onsubmit="updateForm();return false;">
+							<div class="form-group row">
+								<label class="col-sm-12 form-label" th:text="'Mã code'"></label>
+								<div class="col-sm-12">
+									<input required="required" class="form-control" type="text" th:placeholder="'Mã Code'" id="code" name="code" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-12 form-label">Units (Chọn unit đưa sang phải)</label>
+								<div class="col-sm-12">
+									<select id="units-update" name="units" class="units" multiple='multiple'>
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="form-group col-sm-12">
+									<div>
+										<button id="addButton" type="submit" style="width: 60%;" class="btn btn-primary waves-effect waves-light" th:text="#{text.update}"></button>
+										<button type="button" class="btn btn-danger waves-effect waves-light" data-dismiss="modal" th:text="#{text.cancel}"></button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" th:inline="javascript">
+		var vietnameseUrl = [[@{/user/plugins/datatables/Vietnamese.json}]];
+	    var url = [[@{/api/admin/active-code/list}]];
+	    var addURL = [[@{/api/admin/active-code/add}]];
+	    var editUrl = [[@{/api/admin/active-code/update}]];
+	    var delUrl = [[@{/api/admin/active-code/delete}]];
+	    var delMultiUrl = [[@{/api/admin/active-code/delete-multi}]];
+	    var csrf_token = [[${_csrf.token}]];
+	    var searchHolderText = 'Tìm theo mã code';
+	    
+	    var id = "";
+	    var table;
+		$(document).ready(function() {
+			table = $('#datatable').DataTable( {
+				"processing": true,
+		        "serverSide": true,
+		        "ajax": {
+		        	type:"POST",
+		            url: url,
+		            dataType: "json",
+		            contentType: "application/json",
+		            headers: {'X-CSRF-TOKEN': csrf_token},
+		            data: function ( d ) {
+		            	return JSON.stringify( d );
+		            }
+		        },
+		        "columns": [
+		            { "data": "id" },
+		            { "data": "id","visible": false },
+		            { "data": "code" },
+		            { "data": "numberOfUsers" },
+		            { "data": "units" },
+		            { "data": "id" }
+		        ],
+		        "order": [1, "desc"],
+		        "select": {
+		        	'style': 'multi'
+		        },
+		        "columnDefs": [
+		        	{
+					    'targets': 0,
+					    'checkboxes': {
+					       'selectRow': true
+					    }
+				 },
+				 {
+		                "render": function ( data, type, row ) {
+		                    var content = '';
+				            row.unitDTOs.forEach(function(v){
+				            	content += v.name + ","
+				            })
+				            return content;
+		                },
+		                "orderable": false,
+		                "targets": 4
+	            }, 
+	            {
+	                "render": function ( data, type, row ) {
+	                    var content = '<button class="btn btn-primary" data-toggle="modal" data-target="#update-active-code" data-json="' + encodeURI(JSON.stringify(row)) +'"><i class="fa fa-pencil"></i></button>'
+	                    +'<button class="btn btn-danger " data-toggle="modal" data-target="#confirm-delete" data-id=' + row.id + '><i class="fa fa-trash"></i></button>'
+			            
+			            return content;
+	                },
+	                "orderable": false,
+	                "targets": 5
+	            },
+		        ],
+		        "language": {
+		            "url": vietnameseUrl,
+		            searchPlaceholder: searchHolderText
+		        },
+		        "initComplete": function(settings, json) {
+		        }
+	        });
+			
+			$('#datatable tbody').on( 'click', 'button', function () {
+				var data = table.row( $(this).parents('tr') ).data();
+				id = data.id;
+		    })
+		    
+		    $(document).ready(function() {
+			    //load data dropdown shipper
+			   	var unitURL = [[@{/api/member/unit/list}]];
+			    $.ajax({
+			        url : unitURL,
+			        type: 'POST',
+			        dataType: "json",
+		            contentType: "application/json",
+		            headers: {'X-CSRF-TOKEN': csrf_token},
+		            data: JSON.stringify({ "start": null }),
+			        success: function(resp){
+			        	resp.data.forEach(function(v){
+			        		$('.units').append("<option value='" + v.id + "'>" + v.name + "</option>");
+			        	})
+		                $('#update-active-code .units,#add-active-code .units').multiSelect()
+				    }
+			    })
+		    });
+		    
+			$('#confirm-delete').on('click', '.btn-ok', function(e) {
+				  var $modalDiv = $(e.delegateTarget);
+				  $modalDiv.addClass('loading');
+				  $.ajax({
+				        url : delUrl + '/' + id,
+				        type: 'DELETE',
+				        dataType: "text",
+			            contentType: "application/json",
+				        success: function(data){
+				        	$modalDiv.modal('hide');
+				        	table.ajax.reload( null, false );
+					    },
+				        error: function(error){
+				        }
+				    })
+				});
+			
+			//triggered when modal is about to be shown
+			$('#confirm-delete').on('show.bs.modal', function(e) {
+			    //get data-id attribute of the clicked element
+			    var name = $(e.relatedTarget).data('id');
+			    //populate the textbox
+			    $(e.currentTarget).find('div.modal-body').html('<strong>' + name + '</strong>');
+			});
+			var rowIds = [];
+			$('#delButt').on('click', function(e){
+			    var rows_selected = table.column(0).checkboxes.selected();
+			    rowIds = [];
+			    // Iterate over all selected checkboxes
+			    $.each(rows_selected, function(index, rowId){
+			       // Create a hidden element
+			       rowIds.push(rowId);
+			    });
+			    if (rows_selected.length == 0) {
+			    	$("#please-select-dialog").modal('show');
+			    } else {
+			    	$("#confirm-delete-multi").modal('show');
+			    }
+		 	});
+			$('#confirm-delete-multi').on('click', '.btn-ok', function(e) {
+				  var $modalDiv = $(e.delegateTarget);
+				  $.ajax({
+				        url : delMultiUrl + '/' + rowIds.toString(),
+				        type: 'DELETE',
+				        dataType: "text",
+			            contentType: "application/json",
+			            headers: {'X-CSRF-TOKEN': csrf_token},
+				        success: function(data){
+				        	$modalDiv.modal('hide');
+				        	table.ajax.reload( null, false );
+					    }
+				    })
+			});
+			
+			$('#update-active-code').on('show.bs.modal', function(e) {
+			    //get data-id attribute of the clicked element
+			    var jsonStr = $(e.relatedTarget).data('json');
+			  	var row = JSON.parse(decodeURI(jsonStr));
+			  	
+			    //populate the textbox
+			    $("#update-active-code #code").val(row.code);
+			    $("#update-active-code #numberOfUsers").val(row.numberOfUsers);
+			   
+			    $("#update-active-code #id").val(row.id);
+			    
+			    $("#update-active-code .units").val(row.units);
+				$("#update-active-code .units").multiSelect("refresh");
+			})
+	    })
+		
+		function submitForm() {
+			var data = {};
+			$("#add-active-code form").serializeArray().map(function(x) {
+				data[x.name] = x.value;
+			});
+			data.numberOfUsers = 0;
+			data.units = $("#add-active-code .units option[selected]").map(function(i, el) {
+			    return $(el).val();
+			}).get();
+			
+			$.ajax({
+		        url : addURL,
+		        type: 'POST',
+		        dataType: "json",
+	            contentType: "application/json",
+	            headers: {'X-CSRF-TOKEN': csrf_token},
+		        data: JSON.stringify(data),
+		        success: function(){
+		        	$("#add-active-code code").val(null);
+		        	$('#add-active-code').modal('hide');
+			    	table.draw();
+			    },
+		        error: function(){
+		        	alert("Mã kích hoạt đã tồn tại. Chọn mã khác");
+		        }
+		    });
+			return false;
+		}
+		
+		function updateForm() {
+			var data = {id: id};
+			$("#update-active-code form").serializeArray().map(function(x) {
+				data[x.name] = x.value;
+			});
+			data.units = $("#update-active-code .units option[selected]").map(function(i, el) {
+			    return $(el).val();
+			}).get();
+
+			$.ajax({
+		        url : editUrl,
+		        type: 'PUT',
+		        dataType: "text",
+	            contentType: "application/json",
+	            headers: {'X-CSRF-TOKEN': csrf_token},
+		        data: JSON.stringify(data),
+		        success: function(){
+		        	$('#update-active-code').modal('hide');
+		        	table.ajax.reload( null, false );
+			    },
+		        error: function(){
+		        	alert("Mã kích hoạt đã tồn tại. Chọn mã khác");
+		        }
+		    });
+			return false;
+		}
+		
+	</script>
+	</div>
+</body>
+</html>

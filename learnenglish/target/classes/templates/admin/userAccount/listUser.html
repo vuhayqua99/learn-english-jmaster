@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="admin/common/template">
+<head>
+<meta charset="UTF-8" />
+<title>NGƯỜI DÙNG</title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<div class="row">
+			<div class="col-12">
+				<div class="card m-b-30">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-6 col-6">
+								<h4 class="header-title">NGƯỜI DÙNG</h4>
+							</div>
+							<div class="col-md-6 col-6">
+								<a data-toggle="modal" href="" data-target="#add-user" class="pull-right btn btn-primary"><img th:src="@{/user/images/add.png}"
+									height="20" />Thêm mới</a> 
+							</div>
+						</div>
+						<hr />
+						<div class="row">
+							<div class="col-6 col-md-3">
+								<div class="form-group">
+									<label class="control-label" th:text="'Tên'"></label>: <input id="nameSearch" th:placeholder="'Tên'" class="form-control form-control-sm" />
+								</div>
+							</div>
+							<div class="col-6 col-md-3">
+								<div class="form-group">
+									<label class="control-label" th:text="'VAI TRÒ'"></label>: <select class="form-control form-control-sm" id="roleIdSearch">
+										<option value="" th:text="'TẤT CẢ'">
+										<option th:value="1" th:text="'ADMIN'">
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="table-responsive">
+							<table id="datatable" class="table table-bordered">
+								<thead>
+									<tr>
+										<th></th>
+										<th th:text="'ID'"></th>
+										<th th:text="#{user.name}"></th>
+										<th th:text="'Vai Trò'"></th>
+										<th th:text="#{text.option}"></th>
+									</tr>
+								</thead>
+								<tfoot>
+									<tr>
+										<th colspan="2"><button id="delButt" class="btn btn-danger">
+												<i class="fa fa-trash"></i>Xóa tất
+											</button></th>
+										<th th:text="#{user.name}"></th>
+										<th th:text="'Vai Trò'"></th>
+										<th th:text="#{text.option}"></th>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" th:text="#{user.delete.confirm.message}"></div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.no}"></button>
+						<a class="btn btn-danger btn-ok" style="color: white;" th:text="#{text.delete}"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-lock" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" th:text="#{user.lock.confirm.message}"></div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.no}"></button>
+						<a class="btn btn-danger btn-ok" style="color: white;" th:text="#{text.lock}"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-export-exel" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.no}"></button>
+						<a class="btn btn-success btn-ok" style="color: white;" th:text="#{text.yes}"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-export-exel" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.no}"></button>
+						<a class="btn btn-success btn-ok" style="color: white;" th:text="#{text.yes}"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-unlock" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" th:text="#{user.unlock.confirm.message}"></div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.no}"></button>
+						<a class="btn btn-danger btn-ok" style="color: white;" th:text="#{text.unlock}"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-delete-multi" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" th:text="#{user.delete.confirm.message}"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.no}"></button>
+						<button class="btn btn-danger btn-ok" style="color: white;" th:text="#{text.delete}"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="please-select-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">Vui lòng tích chọn các dòng để xoá?</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.cancel}"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="add-user" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h6 class="modal-title">
+							<span th:text="'Thêm Người Dùng'" th:remove="tag"></span>
+						</h6>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" onsubmit="submitFormUser();return false;">
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Số Điện Thoại'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text" th:placeholder="'Số Điện Thoại'" id="phone" name="phone"
+										onkeydown='$("#phone-error").css("display", "none")' /> <span class="help-block text-danger" style="display: none;" id="phone-error">Số
+										điện thoại đã tồn tại!</span>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Mật Khẩu'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="password" th:placeholder="'Mật Khẩu'" id="password" name="password" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Tên Người Dùng'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text" th:placeholder="'Tên Người Dùng'" id="name" name="name" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Địa Chỉ'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text" th:placeholder="'Địa Chỉ'" id="address" name="address" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Vai Trò'"></label>
+								<div class="col-sm-9">
+									<select class="form-control" id="roleId" name="roleId">
+										<option th:value="1" th:text="'ADMIN'">
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3"></div>
+								<div class="form-group col-sm-9">
+									<div>
+										<button id="addButton" type="submit" class="btn btn-primary waves-effect waves-light" th:text="#{text.add}"></button>
+										<button type="button" class="btn btn-danger waves-effect waves-light" data-dismiss="modal" th:text="#{text.cancel}"></button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="update-user" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h6 class="modal-title">
+							<span th:text="'Sửa Người Dùng'" th:remove="tag"></span>
+						</h6>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" onsubmit="updateForm();return false;">
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'ID'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" readonly type="text" th:placeholder="'ID'" id="id" name="id" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Số Điện Thoại'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text" th:placeholder="'Số Điện Thoại'" id="phone" name="phone"
+										onkeydown='$("#update-user #phone-error").css("display", "none")' /> <span class="help-block text-danger" style="display: none;"
+										id="phone-error">Số điện thoại đã tồn tại!</span>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Tên Người Dùng'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text" th:placeholder="'Tên Người Dùng'" id="name" name="name" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Địa Chỉ'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text" th:placeholder="'Địa Chỉ'" id="address" name="address" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Vai Trò'"></label>
+								<div class="col-sm-9">
+									<select class="form-control" id="roleId" name="roleId">
+										<option th:value="1" th:text="'ADMIN'">
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3"></div>
+								<div class="form-group col-sm-9">
+									<div>
+										<button id="addButton" type="submit" class="btn btn-primary waves-effect waves-light" th:text="'Cập Nhật'"></button>
+										<button type="button" class="btn btn-danger waves-effect waves-light" data-dismiss="modal" th:text="#{text.cancel}"></button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- xoa chiet khau -->
+		<div class="modal fade" id="history" tabindex="-1" role="dialog" aria-hidden="true">
+			<script type="text/javascript" th:inline="javascript">
+		var vietnameseUrl = [[@{/user/plugins/datatables/Vietnamese.json}]];
+	    var url = [[@{/api/staff/user/list}]];
+	    var editUrl = [[@{/api/admin/user/update}]];
+	    var resetPasswordUrl = [[@{/admin/account/reset-password}]];
+	    var delUrl = [[@{/api/admin/user/delete}]];
+	    var delMultiUrl = [[@{/api/admin/user/delete-multi}]];
+	    var addUserURL = [[@{/api/staff/user/add}]];
+	    var changeLockURL = [[@{/api/admin/user/change-lock}]];
+	    var csrf_token = [[${_csrf.token}]];
+	    var searchHolderText = [[#{user.search.holder}]];
+	    var exportExelUrl = [[@{/admin/user/excel/export}]]
+		var downloadExelUrl = [[@{/admin/file/}]];
+		var searchDTO = {};
+	    
+	    var id = "";
+	    var table;
+      
+		$(document).ready(function() {
+			$("#latestTopupDate").datetimepicker({
+				format : 'd/m/Y H:i',
+				timepicker : true
+			})
+			table = $('#datatable').DataTable( {
+				"searching": false,
+				"processing": true,
+		        "serverSide": true,
+		        "ajax": {
+		        	type:"POST",
+		            url: url,	
+		            dataType: "json",
+		            contentType: "application/json",
+		            headers: {'X-CSRF-TOKEN': csrf_token},
+		            data: function ( d ) {
+		            	if ($("#roleIdSearch").val() == "") {
+			            	d.roleList = [1];
+		            	} else {
+		            		d.roleList = [$("#roleIdSearch").val()];
+		            	}
+		            	
+		            	d.search.value = $("#nameSearch").val()
+		            	searchDTO = d
+		            	return JSON.stringify( d );
+		            }
+		        },
+		        "lengthMenu": [10, 25, 50, 100, 200],
+		        "columns": [ 
+		            { "data": "id" },
+		            { "data": "id" },
+		            { "data": "name" },
+		            { "data": "types" },
+		            { "data": "id" }
+		        ],
+		        "order": [1, "desc"],
+		        "select": {
+		        	'style': 'multi'
+		        },
+		        "columnDefs": [
+					
+					{
+					    'targets': 0,
+					    'checkboxes': {
+					       'selectRow': true
+					    }
+					},
+					{
+		              "render": function (data, type, row) {
+		            	  let str = "";
+			              return str + row.phone + "<br/>"  + row.address + "<br/> "+  row.name
+		              },
+		              "targets": 2
+		            },
+		        	{
+			              "render": function (data, type, row) {
+			            	  let str = "";
+			            	  if(row.roleId == 1) {
+			            		  str = ' <span class="label label-success">ADMIN</span><br/>' ;
+				               } else if(row.roleId == 2 ) {
+				            	  str = '<span class="label label-primary">NHÂN VIÊN</span><br/>'  ;
+				               }else if(row.roleId == 3 ) {
+				            	  str = '<span class="label label-warning">KHÁCH HÀNG</span><br/>'  ;
+				               }
+				               if(!row.enabled) {
+				                	str = '<span class="label label-danger">Bị khoá</span>' + str;
+				               }
+			            
+			            	  return str;
+			              },
+			              "targets": 3
+			            },
+		    		
+     		     	{
+   	                "render": function ( data, type, row ) {
+   	                	var content =  '';
+   	                	content += '<button data-toggle="modal" data-target="#update-user" data-json="' + encodeURI(JSON.stringify(row)) +'" class="btn btn-primary"><i class="fa fa-pencil-alt"></i>Sửa</button>'
+	              		content +='<button class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete" data-json='+ encodeURI(JSON.stringify(row))+'><i class="fa fa-trash"></i>Xóa</button>'
+	              		content +='<button onclick="resetPassword(' + row.id + ')" class="btn btn-info"><i class="fa fa-key"></i>Đổi mật khẩu</button>';
+	              		if (row.enabled) {
+		              		content +='<button data-toggle="modal" data-target="#confirm-lock" data-json="' + encodeURI(JSON.stringify(row)) +'" class="btn btn-warning"><i class="fa fa-lock"></i>Khóa TK</button>';
+	              		} else {
+		              		content +='<button data-toggle="modal" data-target="#confirm-unlock" data-json="' + encodeURI(JSON.stringify(row)) +'" class="btn btn-warning"><i class="fa fa-unlock"></i>Mở khóa TK</button>';
+	              		}
+   	                    return content;
+   	                },
+					"orderable" : false,
+   	                "targets": 4
+  	            	}
+		        ],
+		        "language": {
+		            "url": vietnameseUrl,
+		            "searchPlaceholder": searchHolderText
+		        },
+		        "initComplete": function(settings, json) {
+		        	$("#nameSearch").keyup(function(){
+		        		table.draw();
+		        	})
+		        	$("#roleIdSearch, #typeIdSearch").change(function(){
+		        		table.draw();
+		        	})
+		        },
+		        "drawCallback": function (settings) {
+	            }
+	        });
+			
+			$('#datatable tbody').on( 'click', 'tr', function () {
+				var data = table.row($(this)).data();
+				id = data.id;
+		    })
+		    
+			$('#update-user').on('show.bs.modal', function(e) {
+			    //get data-id attribute of the clicked element
+				var jsonStr = $(e.relatedTarget).data('json');
+			  	var row = JSON.parse(decodeURI(jsonStr));
+			    //populate the textbox
+			  	 $("#update-user #name").val(row.name);
+			  	 $("#update-user #phone").val(row.phone);
+			  	 $("#update-user #roleId").val(row.roleId);
+			  	 $("#update-user #address").val(row.address);
+				 $("#update-user #id").val(row.id);
+			});
+			
+			$('#confirm-delete').on('click', '.btn-ok', function(e) {
+			  var $modalDiv = $(e.delegateTarget);
+			  $.ajax({
+			        url : delUrl + '/' + id,
+			        type: 'DELETE',
+			        dataType: "text",
+		            contentType: "application/json",
+			        success: function(data){
+			        	$modalDiv.modal('hide');
+			        	table.ajax.reload( null, false );
+				    },
+			        error: function(error){
+			        	if (error.status == 409) {
+			        		$modalDiv.find('div.modal-body').html('<b>Người dùng đang sử dụng! Bạn cần xoá lịch sử thành viên từ người này trước.</b>');
+						}
+			        }
+			    })
+			})
+			
+			//triggered when modal is about to be shown
+			$('#confirm-delete, #confirm-lock, #confirm-unlock').on('show.bs.modal', function(e) {
+			    //get data-id attribute of the clicked element
+			    var jsonStr = $(e.relatedTarget).data('json');
+			  	var row = JSON.parse(decodeURI(jsonStr));
+			    //populate the textbox
+			    $(e.currentTarget).find('div.modal-body').html('<strong>' + row.name + ' - ' + row.phone + '</strong>');
+			});
+			
+			$('#confirm-export-exel').on('click', '.btn-ok', function(e) {
+				  var $modalDiv = $(e.delegateTarget);
+				  $modalDiv.find('div.modal-body').html('<strong>Đang tạo file excel. Vui lòng đợi chút nhé!</strong>');
+				  $.ajax({
+				        url: exportExelUrl,
+				        method: 'POST',
+				        dataType: 'text',
+				        contentType: 'application/json;charset=UTF-8',
+				        headers: {'X-CSRF-TOKEN': csrf_token},
+			            data: JSON.stringify(searchDTO),
+				        success: function (data) {
+				            $modalDiv.modal('hide');
+				        	window.location.href=downloadExelUrl + data;
+				        }
+				    });
+				});
+			
+			$('#confirm-export-exel').on('show.bs.modal', function(e) {
+			    $(e.currentTarget).find('div.modal-body').html('<strong>Bạn muốn xuất danh sách  người dùng ra exel?</strong>');
+			});
+			$('#confirm-lock').on('click', '.btn-ok', function(e) {
+			  var $modalDiv = $(e.delegateTarget);
+			  $.ajax({
+			        url : changeLockURL + '/' + id,
+			        type: 'PUT',
+			        dataType: "text",
+		            contentType: "application/json",
+			        success: function(data){
+			        	$modalDiv.modal('hide');
+			        	table.ajax.reload( null, false );
+				    },
+			        error: function(error){
+			        }
+			    })
+			})
+				
+			$('#confirm-unlock').on('click', '.btn-ok', function(e) {
+			  var $modalDiv = $(e.delegateTarget);
+			  $.ajax({
+			        url : changeLockURL + '/' + id,
+			        type: 'PUT',
+			        dataType: "text",
+		            contentType: "application/json",
+			        success: function(data){
+			        	$modalDiv.modal('hide');
+			        	table.ajax.reload( null, false );
+				    },
+			        error: function(error){
+			        }
+			    })
+			})
+			
+			// Handle form submission event
+			var rowIds = [];
+			$('#delButt').on('click', function(e){
+			    var rows_selected = table.column(0).checkboxes.selected();
+			    rowIds = [];
+			    // Iterate over all selected checkboxes
+			    $.each(rows_selected, function(index, rowId){
+			       // Create a hidden element
+			       rowIds.push(rowId);
+			    });
+			    if (rows_selected.length == 0) {
+			    	$("#please-select-dialog").modal('show');
+			    } else {
+			    	$("#confirm-delete-multi").modal('show');
+			    }
+		 	});
+			
+			$('#confirm-delete-multi').on('click', '.btn-ok', function(e) {
+				  var $modalDiv = $(e.delegateTarget);
+				  $.ajax({
+				        url : delMultiUrl + '/' + rowIds.toString(),
+				        type: 'DELETE',
+				        dataType: "text",
+			            contentType: "application/json",
+			            headers: {'X-CSRF-TOKEN': csrf_token},
+				        success: function(data){
+				        	$modalDiv.modal('hide');
+				        	table.ajax.reload( null, false );
+					    }
+				    })
+			})
+	    });
+		
+		function submitFormUser() {
+			var data = {};
+			$("#add-user form").serializeArray().map(function(x) {
+				data[x.name] = x.value;
+			});
+	        
+			$.ajax({
+		        url : addUserURL,
+		        type: 'POST',
+		        dataType: "json",
+	            contentType: "application/json",
+	            headers: {'X-CSRF-TOKEN': csrf_token},
+		        data: JSON.stringify(data),
+		        success: function(data){
+		        	$('#add-user').modal('hide');
+			    	table.draw();
+		        	$("#add-user form")[0].reset();
+			    },
+		        error: function(error){
+		        	if (error.status == 409) {
+	                    $("#add-user #phone-error").css("display", "block");
+					}
+		        }
+		    })
+			return false;
+		}
+		
+		function updateForm() {
+			var data = {};
+			$("#update-user form").serializeArray().map(function(x) {
+				data[x.name] = x.value;
+			});
+			$.ajax({
+		        url : editUrl,
+		        type: 'PUT',
+		        dataType: "text",
+	            contentType: "application/json",
+	            headers: {'X-CSRF-TOKEN': csrf_token},
+		        data: JSON.stringify(data),
+		        success: function(){
+		        	$('#update-user').modal('hide');
+			    	table.ajax.reload( null, false );
+			    },
+		        error: function(error){
+		        	if (error.status == 409) {
+                        $("#update-user #phone-error").css("display", "block");
+                    }
+		        }
+		    });
+			return false;
+		}
+	
+		 $(function() {
+			$("#toDate").datetimepicker({
+				format : 'd/m/Y H:i',
+				timepicker : true
+			});
+			$("#fromDate").datetimepicker({
+				format : 'd/m/Y H:i',
+				timepicker : true
+			});
+		});
+		 
+		function resetPassword(id) {
+			window.location.href = resetPasswordUrl + "/" + id;
+		}
+		</script>
+		</div>
+</body>
+</html>
